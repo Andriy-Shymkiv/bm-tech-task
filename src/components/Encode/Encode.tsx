@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
 import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
+import { Button, MenuItem } from '@mui/material';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import { useState } from 'react';
@@ -8,13 +8,13 @@ import { styles } from '../../styles/muiStyles/styles';
 
 export const Encode: React.FC = () => {
   const [inputText, setInputText] = useState('');
-  const [encodedText, setEncodedText] = useState<any[]>([]);
-  const [fullEncodedText, setFullEncodedText] = useState<any[]>([]);
+  const [encodedText, setEncodedText] = useState<number[]>([]);
+  const [fullEncodedText, setFullEncodedText] = useState<number[]>([]);
   const [showFullText, setShowFullText] = useState(false);
   const [shift, setShift] = useState<number>();
   const [repeats, setRepeats] = useState<number>();
 
-  const handleText = (e: any) => {
+  const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^A-Za-z0-9]/g, '_');
 
     if (val === val.toUpperCase() && val.length <= 256 && !/\d/.test(val)) {
@@ -63,6 +63,9 @@ export const Encode: React.FC = () => {
     setShowFullText(true);
   };
 
+  const selectShift = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const selectRepeats = [0, 1, 2, 3, 4, 5];
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.convertWrapper}>
@@ -83,7 +86,8 @@ export const Encode: React.FC = () => {
         />
         <Box sx={styles.options}>
           <TextField
-            type="number"
+            select
+            defaultValue={selectShift[0]}
             variant="standard"
             sx={styles.optionsField}
             placeholder="Shift"
@@ -96,9 +100,16 @@ export const Encode: React.FC = () => {
                 margin: '14px',
               },
             }}
-          />
+          >
+            {selectShift.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
           <TextField
-            type="number"
+            select
+            defaultValue={selectRepeats[0]}
             variant="standard"
             sx={styles.optionsField}
             placeholder="Number of repeats"
@@ -111,7 +122,13 @@ export const Encode: React.FC = () => {
                 margin: '14px',
               },
             }}
-          />
+          >
+            {selectRepeats.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
         </Box>
         <Button
           sx={styles.convertButton}
