@@ -9,8 +9,8 @@ import { styles } from '../../styles/muiStyles/styles';
 export const Encode: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [encodedText, setEncodedText] = useState<number[]>([]);
-  const [fullEncodedText, setFullEncodedText] = useState<number[]>([]);
-  const [showFullText, setShowFullText] = useState(false);
+  const [fullEncodedCode, setFullEncodedCode] = useState<number[]>([]);
+  const [showFullCode, setShowFullCode] = useState(false);
   const [shift, setShift] = useState<number>();
   const [repeats, setRepeats] = useState<number>();
 
@@ -26,12 +26,10 @@ export const Encode: React.FC = () => {
     const encoder = new TextEncoder();
     let encoded = encoder.encode(inputText);
 
-    // apply shift
     if (shift) {
-      encoded = encoded.map((n) => n + shift);
+      encoded = encoded.map(number => number + shift);
     }
 
-    // repeat the encoded text
     if (repeats) {
       const repeatedEncoded = new Uint8Array(encoded.length * repeats);
 
@@ -42,25 +40,25 @@ export const Encode: React.FC = () => {
       encoded = repeatedEncoded;
     }
 
-    const result = Array.from(encoded);
+    const code = Array.from(encoded);
 
-    if (result.length > 400) {
-      const newResult = result.slice(0, 380);
+    if (code.length > 400) {
+      const cuttedCode = code.slice(0, 380);
 
-      setEncodedText(newResult);
+      setEncodedText(cuttedCode);
     } else {
-      setEncodedText(result);
+      setEncodedText(code);
     }
 
-    setFullEncodedText(result);
+    setFullEncodedCode(code);
   };
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(fullEncodedText.join(''));
+    navigator.clipboard.writeText(fullEncodedCode.join(''));
   };
 
   const handleShowAllClick = () => {
-    setShowFullText(true);
+    setShowFullCode(true);
   };
 
   const selectShift = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -141,16 +139,16 @@ export const Encode: React.FC = () => {
       <Box sx={styles.resultsWrapper}>
         <h2>Result</h2>
         <Box sx={{ flex: '1', marginBottom: '32px' }}>
-          {!showFullText && (
+          {!showFullCode && (
             <div>
               {encodedText.map((number) => (
                 <span>{number}</span>
               ))}
             </div>
           )}
-          {showFullText && (
+          {showFullCode && (
             <div>
-              {fullEncodedText.map((number) => (
+              {fullEncodedCode.map((number) => (
                 <span>{number}</span>
               ))}
             </div>
