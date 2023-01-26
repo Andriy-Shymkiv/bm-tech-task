@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
 import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
+import { Button, MenuItem } from '@mui/material';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import { useState } from 'react';
@@ -8,13 +8,13 @@ import { styles } from '../../styles/muiStyles/styles';
 
 export const Encode: React.FC = () => {
   const [inputText, setInputText] = useState('');
-  const [encodedText, setEncodedText] = useState<any[]>([]);
-  const [fullEncodedText, setFullEncodedText] = useState<any[]>([]);
-  const [showFullText, setShowFullText] = useState(false);
+  const [encodedText, setEncodedText] = useState<number[]>([]);
+  const [fullEncodedCode, setFullEncodedCode] = useState<number[]>([]);
+  const [showFullCode, setShowFullCode] = useState(false);
   const [shift, setShift] = useState<number>();
   const [repeats, setRepeats] = useState<number>();
 
-  const handleText = (e: any) => {
+  const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^A-Za-z0-9]/g, '_');
 
     if (val === val.toUpperCase() && val.length <= 256 && !/\d/.test(val)) {
@@ -26,12 +26,10 @@ export const Encode: React.FC = () => {
     const encoder = new TextEncoder();
     let encoded = encoder.encode(inputText);
 
-    // apply shift
     if (shift) {
-      encoded = encoded.map((n) => n + shift);
+      encoded = encoded.map(number => number + shift);
     }
 
-    // repeat the encoded text
     if (repeats) {
       const repeatedEncoded = new Uint8Array(encoded.length * repeats);
 
@@ -42,26 +40,29 @@ export const Encode: React.FC = () => {
       encoded = repeatedEncoded;
     }
 
-    const result = Array.from(encoded);
+    const code = Array.from(encoded);
 
-    if (result.length > 400) {
-      const newResult = result.slice(0, 380);
+    if (code.length > 400) {
+      const cuttedCode = code.slice(0, 380);
 
-      setEncodedText(newResult);
+      setEncodedText(cuttedCode);
     } else {
-      setEncodedText(result);
+      setEncodedText(code);
     }
 
-    setFullEncodedText(result);
+    setFullEncodedCode(code);
   };
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(fullEncodedText.join(''));
+    navigator.clipboard.writeText(fullEncodedCode.join(''));
   };
 
   const handleShowAllClick = () => {
-    setShowFullText(true);
+    setShowFullCode(true);
   };
+
+  const selectShift = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const selectRepeats = [0, 1, 2, 3, 4, 5];
 
   return (
     <Box sx={styles.container}>
@@ -83,7 +84,8 @@ export const Encode: React.FC = () => {
         />
         <Box sx={styles.options}>
           <TextField
-            type="number"
+            select
+            defaultValue={selectShift[0]}
             variant="standard"
             sx={styles.optionsField}
             placeholder="Shift"
@@ -96,9 +98,16 @@ export const Encode: React.FC = () => {
                 margin: '14px',
               },
             }}
-          />
+          >
+            {selectShift.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
           <TextField
-            type="number"
+            select
+            defaultValue={selectRepeats[0]}
             variant="standard"
             sx={styles.optionsField}
             placeholder="Number of repeats"
@@ -111,7 +120,13 @@ export const Encode: React.FC = () => {
                 margin: '14px',
               },
             }}
-          />
+          >
+            {selectRepeats.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
         </Box>
         <Button
           sx={styles.convertButton}
@@ -124,16 +139,16 @@ export const Encode: React.FC = () => {
       <Box sx={styles.resultsWrapper}>
         <h2>Result</h2>
         <Box sx={{ flex: '1', marginBottom: '32px' }}>
-          {!showFullText && (
+          {!showFullCode && (
             <div>
               {encodedText.map((number) => (
                 <span>{number}</span>
               ))}
             </div>
           )}
-          {showFullText && (
+          {showFullCode && (
             <div>
-              {fullEncodedText.map((number) => (
+              {fullEncodedCode.map((number) => (
                 <span>{number}</span>
               ))}
             </div>

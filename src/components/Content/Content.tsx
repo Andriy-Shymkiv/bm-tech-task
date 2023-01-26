@@ -3,7 +3,6 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabsList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-// import { Tabs } from '@mui/material';
 import { useState } from 'react';
 import { Encode } from '../Encode';
 import { Decode } from '../Decode';
@@ -32,10 +31,7 @@ export const Content: React.FC = () => {
     <Box sx={{ width: '100%', typography: 'body1' }}>
       <TabContext value={value}>
         <Box>
-          <TabsList
-            onChange={handleChange}
-            aria-label="tabs"
-          >
+          <TabsList onChange={handleChange} aria-label="tabs">
             <Tab label="Encode" value="1" sx={contentStyles.tab} />
             <Tab label="Decode" value="2" sx={contentStyles.tab} />
           </TabsList>
