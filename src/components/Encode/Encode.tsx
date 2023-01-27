@@ -23,8 +23,11 @@ export const Encode: React.FC = () => {
   };
 
   const handleEncode = () => {
-    const encoder = new TextEncoder();
-    let encoded = encoder.encode(inputText);
+    const arrayOfChars = inputText.split('');
+
+    let encoded = arrayOfChars
+      .map(char => char.charCodeAt(0))
+      .map(code => +code);
 
     if (shift) {
       encoded = encoded.map(number => number + shift);
@@ -37,7 +40,7 @@ export const Encode: React.FC = () => {
         repeatedEncoded.set(encoded, i * encoded.length);
       }
 
-      encoded = repeatedEncoded;
+      encoded = Array.from(repeatedEncoded);
     }
 
     const code = Array.from(encoded);
@@ -142,7 +145,7 @@ export const Encode: React.FC = () => {
           {!showFullCode && (
             <div>
               {encodedText.map((number) => (
-                <span>{number}</span>
+                <span key={Math.random()}>{number}</span>
               ))}
             </div>
           )}
