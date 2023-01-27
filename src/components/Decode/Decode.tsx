@@ -130,7 +130,7 @@ export const Decode: React.FC = () => {
           variant="contained"
           onClick={handleDecode}
         >
-          Decode this text
+          Decode this code
         </Button>
       </Box>
       <Box sx={styles.resultsWrapper}>
