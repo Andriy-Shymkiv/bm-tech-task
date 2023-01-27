@@ -28,12 +28,22 @@ export const Decode: React.FC = () => {
     }
 
     if (unshift) {
-      textAfterDecode = textAfterDecode.map(number => number - unshift);
+      textAfterDecode = textAfterDecode.map((number) => {
+        if (number === 95) {
+          return number;
+        }
+
+        const numberMinusShift = number - unshift;
+
+        return numberMinusShift;
+      });
     }
 
     if (repeats) {
-      textAfterDecode = textAfterDecode
-        .slice(0, textAfterDecode.length / repeats);
+      textAfterDecode = textAfterDecode.slice(
+        0,
+        textAfterDecode.length / repeats,
+      );
     }
 
     const decoded = String.fromCharCode(...textAfterDecode);
@@ -135,9 +145,7 @@ export const Decode: React.FC = () => {
       </Box>
       <Box sx={styles.resultsWrapper}>
         <h2>Result</h2>
-        <Box
-          sx={{ flex: '1', marginBottom: '32px' }}
-        >
+        <Box sx={{ flex: '1', marginBottom: '32px' }}>
           {!showFullText && decodedText}
           {showFullText && fullDecodedText}
         </Box>
