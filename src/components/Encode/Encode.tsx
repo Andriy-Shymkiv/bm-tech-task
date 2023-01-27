@@ -26,11 +26,21 @@ export const Encode: React.FC = () => {
     const arrayOfChars = inputText.split('');
 
     let encoded = arrayOfChars
-      .map(char => char.charCodeAt(0))
-      .map(code => +code);
+      .map((char) => char.charCodeAt(0))
+      .map((code) => +code);
 
     if (shift) {
-      encoded = encoded.map(number => number + shift);
+      encoded = encoded.map((number) => {
+        let numberPlusShift = number + shift;
+
+        if (numberPlusShift > 99) {
+          numberPlusShift = 95;
+
+          return numberPlusShift;
+        }
+
+        return numberPlusShift;
+      });
     }
 
     if (repeats) {
