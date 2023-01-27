@@ -32,10 +32,7 @@ export const Content: React.FC = () => {
     <Box sx={{ width: '100%', typography: 'body1' }}>
       <TabContext value={value}>
         <Box>
-          <TabsList
-            onChange={handleChange}
-            aria-label="tabs"
-          >
+          <TabsList onChange={handleChange} aria-label="tabs">
             <Tab label="Encode" value="1" sx={contentStyles.tab} />
             <Tab label="Decode" value="2" sx={contentStyles.tab} />
           </TabsList>
